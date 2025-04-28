@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.tictactoe.ui.theme.TicTacToeTheme
 
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +47,10 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TicTacToeApp() {
+fun TicTacToeApp(viewModel: TicTacToeViewModel = TicTacToeViewModel()) {
+
+
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -69,14 +74,28 @@ fun TicTacToeApp() {
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            TicTacToeBoard(modifier = Modifier.fillMaxSize())
+            TicTacToeBoard(
+                modifier = Modifier.fillMaxSize(),
+                board = viewModel.board,
+                onCellClick = viewModel::handleBoardClick,
+                currentPlayer = viewModel.currentPlayer,
+                gameStatus = viewModel.gameStatus,
+                onNewGameClick = viewModel::newGame
+                )
         }
     }
 }
 
 
 @Composable
-fun TicTacToeBoard(modifier: Modifier = Modifier) {
+fun TicTacToeBoard(
+    modifier: Modifier = Modifier,
+    board: Array<Array<String>>,
+    onCellClick: (Int, Int) -> Unit,
+    currentPlayer: String,
+    gameStatus: String,
+    onNewGameClick: () -> Unit
+    ) {
     Column(
         modifier = modifier
             .background(Color.White)
@@ -89,21 +108,27 @@ fun TicTacToeBoard(modifier: Modifier = Modifier) {
                         modifier = Modifier
                             .weight(1f)
                             .aspectRatio(1f)
-                            .padding(4.dp)
+                            .padding(4.dp),
+                        onClick = { onCellClick(row, col) },
+                        value = board[row][col]
                     )
                 }
             }
         }
 
         Text(
-            text = "Current Player: X",
+            text = when {
+                gameStatus.startsWith("Winner") -> gameStatus
+                gameStatus == "Draw" -> "Game ended in a Draw"
+                else -> "Current Player: $currentPlayer"
+            },
             fontSize = 24.sp,
             modifier = Modifier
                 .padding(16.dp)
                 .align(Alignment.CenterHorizontally))
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = onNewGameClick,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .offset(y = (30).dp)
@@ -118,11 +143,16 @@ fun TicTacToeBoard(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun BoardCell(modifier: Modifier = Modifier) {
+fun BoardCell(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    value: String
+    ) {
     Box(
         modifier = modifier
             .background(Color.Gray)
             .padding(2.dp)
+            .clickable(onClick = onClick)
     ) {
         Text(
             text = "",
@@ -131,18 +161,6 @@ fun BoardCell(modifier: Modifier = Modifier) {
         )
     }
 }
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier.padding(8.dp)
-    )
-
-    TicTacToeBoard(modifier = Modifier.fillMaxSize())
-}
-
-
 
 
 
@@ -153,3 +171,4 @@ fun GreetingPreview() {
         TicTacToeApp()
     }
 }
+
