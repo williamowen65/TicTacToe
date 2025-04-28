@@ -1,0 +1,107 @@
+package com.example.tictactoe
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.Shapes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.tictactoe.ui.theme.TicTacToeTheme
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            TicTacToeTheme {
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    Greeting(
+                        name = "Android",
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun TicTacToeBoard(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .background(Color.White)
+            .padding(16.dp)
+    ) {
+        for (row in 0..2) {
+            Row {
+                for (col in 0..2) {
+                    BoardCell(
+                        modifier = Modifier
+                            .weight(1f)
+                            .aspectRatio(1f)
+                            .padding(4.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun BoardCell(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .background(Color.Gray)
+            .padding(2.dp)
+    ) {
+        Text(
+            text = "",
+            modifier = Modifier.align(Alignment.Center),
+            color = Color.Black
+        )
+    }
+}
+
+@Composable
+fun Greeting(name: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hello $name!",
+        modifier = modifier.padding(8.dp)
+    )
+
+    TicTacToeBoard(modifier = Modifier.fillMaxSize())
+}
+
+
+
+
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun GreetingPreview() {
+    TicTacToeTheme {
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            Greeting(
+                name = "Android",
+                modifier = Modifier.padding(innerPadding))
+        }
+    }
+}
