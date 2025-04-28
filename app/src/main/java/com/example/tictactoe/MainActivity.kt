@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -92,6 +93,26 @@ fun TicTacToeBoard(modifier: Modifier = Modifier) {
                     )
                 }
             }
+        }
+
+        Text(
+            text = "Current Player: X",
+            fontSize = 24.sp,
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.CenterHorizontally))
+
+        Button(
+            onClick = { /*TODO*/ },
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .offset(y = (30).dp)
+        ) {
+            Text(
+                text = "New Game",
+                fontSize = 20.sp,
+                modifier = Modifier.padding(8.dp)
+            )
         }
     }
 }
